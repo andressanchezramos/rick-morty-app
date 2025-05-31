@@ -26,10 +26,10 @@ jobs:
           pip install ruff bandit
 
       - name: Run ruff linter
-        run: ruff api tests
+        run: ruff check api/
 
       - name: Run Bandit security scan
-        run: bandit -r api -ll
+        run: bandit -r api/
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
