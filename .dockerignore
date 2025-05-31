@@ -1,0 +1,76 @@
+# ============================================
+#  Source: common-configs
+# ============================================
+# Common development files
+**/.git/
+.gitignore
+**/.gitattributes
+../../.github/
+**/README.md
+**/CONTRIBUTING.md
+**/LICENSE
+
+# Python development files
+**/__pycache__/
+**/*.py[cod]
+**/*.so
+**/.venv/
+**/venv/
+**/env/
+**/myenv/
+
+# IDE configurations
+**/.idea/
+**/.vscode/
+**/.sublime-workspace
+**/.sublime-project
+
+# Build artifacts
+**/dist/
+**/build/
+**/target/
+**/node_modules/
+**/package-lock.json
+
+# Docker-specific files
+**/Dockerfile*
+.dockerignore
+**/docker-compose*.yaml
+**/docker-compose*.yml
+
+# Helm Charts
+**/charts/
+**/requirements.yaml
+**/values.yaml
+**/Chart.yaml
+
+# libpostal data
+**/libpostal_data/
+**/postal_data/
+
+# FastAPI development files
+**/fastapi.log
+**/gunicorn.log
+
+# Test files
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/pytest.log
+**/.coverage
+**/coverage.xml
+**/htmlcov/
+**/*.log
+
+# Documentation
+**/*.md
+
+# OS-specific files
+**/.DS_Store
+**/Thumbs.db
+
+# Temporary files
+**/.tmp/
+**/*.tmp
+**/*.pid
+**/*.out

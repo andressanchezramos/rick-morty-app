@@ -7,7 +7,7 @@ Note: The external API only supports filtering by "species" and "status".
 ---
 
 ## Project Structure
-
+```
 rick-morty-app/
 ├── api/                    # Application source code
 │   ├── api.py              # API entrypoint
@@ -22,7 +22,7 @@ rick-morty-app/
 ├── start_server.sh         # Script to start the API & dependencies
 ├── shutdown_server.sh      # Script to stop the API & dependencies
 └── README.md               # This file
-
+```
 ---
 
 ## Development Setup
@@ -31,28 +31,28 @@ rick-morty-app/
 
 To spin up the environment quickly:
 
-./start_server.sh
+`./start_server.sh`
 
 To shut it down:
 
-./shutdown_server.sh
+`./shutdown_server.sh`
 
 ---
 
 ### Manual Setup
 
 1. Create and activate a virtual environment:
-
+```
 python3 -m venv .venv
 source .venv/bin/activate
-
+```
 2. Install dependencies:
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 3. Start Redis and PostgreSQL using Docker:
 
-docker-compose up -d
+`docker-compose up -d`
 
 ---
 
@@ -60,15 +60,15 @@ docker-compose up -d
 
 ### Collect Data Manually
 
-python3 -m api.collect_data
+`python3 -m api.collect_data`
 
 ### Run Tests
 
-pytest
+`pytest`
 
 ### Start API Server Manually
 
-uvicorn api.api:app --reload
+`uvicorn api.api:app --reload`
 
 ---
 
@@ -76,43 +76,43 @@ uvicorn api.api:app --reload
 
 Health check:
 
-curl http://localhost:8000/health
+`curl http://localhost:8000/health`
 
 Interactive API Docs:
 Open http://localhost:8000/docs in your browser.
 
 Query all characters:
 
-curl http://localhost:8000/characters
+`curl http://localhost:8000/characters`
 
 Query with pagination:
 
-curl http://localhost:8000/characters?page=2&limit=10
+`curl http://localhost:8000/characters?page=2&limit=10`
 
 ---
 
 ## Useful Commands
 
 ### Redis CLI Query
-
+```
 redis-cli
 127.0.0.1:6379> GET characters
-
+```
 ### PostgreSQL CLI Query
-
+```
 psql -h localhost -p 5432 -U user -d mydatabase
 Password for user user:
 
 mydatabase=# SELECT name, origin, status, species FROM characters;
-
+```
 ---
 
 ## Cleanup
 
 To stop the containers:
 
-docker compose down
+`docker compose down`
 
 To stop and remove volumes (including database data):
 
-docker compose down -v
+`docker compose down -v`
