@@ -79,18 +79,6 @@ class PostgreManager:
                     ),
                 )
 
-    # def fetch_all_characters(self, sort: str = "asc") -> list[dict]:
-    #    if sort.lower() not in ("asc", "desc"):
-    #        sort = "asc"  # fallback to default
-    #
-    #    with self.conn.cursor() as cur:
-    #        query = f"SELECT name, origin, status, species FROM characters ORDER BY name {sort.upper()};"
-    #        cur.execute(query)
-    #        rows = cur.fetchall()
-    #        columns = [desc[0] for desc in cur.description]
-    #        result = [dict(zip(columns, row)) for row in rows]
-    #        return json.dumps(result)
-
     def fetch_all_characters(
         self, sort: str = "asc", page: int = 1, limit: int = 10
     ) -> dict:

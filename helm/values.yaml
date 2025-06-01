@@ -1,0 +1,68 @@
+appName: rick-morty-api
+namespace: "test"
+replicas: 2
+registry: "docker.io"
+image: "andressanchezramos/rick-morty-api"
+image_tag: "pr-1"
+imagePullPolicy: IfNotPresent
+port: 8000
+protocol: "TCP"
+serviceType: ClusterIP
+
+memory_requests: "50Mi"
+cpu_requests: "20m"
+memory_limits: "100Mi"
+cpu_limits: "40m"
+
+livenessProbe:
+  path: "/health"
+  initialDelaySeconds: 30
+  periodSeconds: 30
+readinessProbe:
+  path: "/health"
+  initialDelaySeconds: 30
+  periodSeconds: 30
+
+hpa:
+  minReplicas: 2
+  maxReplicas: 3
+  cpuTargetUtilization: 95
+  memoryTargetUtilization: 95
+  scaleUp:
+    pods: 1
+    periodSeconds: 30
+    stabilizationWindowSeconds: 10
+  scaleDown:
+    pods: 1
+    periodSeconds: 15
+    stabilizationWindowSeconds: 300
+
+env:
+  POSTGRES_USER: user
+  POSTGRES_DB: mydatabase
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  REDIS_TTL: "3600"
+
+secrets:
+  POSTGRES_PASSWORD: ""  # Inject via GitHub Actions or CLI, e.g: --set secrets.POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}"
+
+# values.yaml
+extraContainers:
+  - name: fluentd-sidecar
+    image: fluent/fluentd:latest
+    volumeMounts:
+      - name: log-volume
+        mountPath: /var/log/app
+    env:
+      - name: FLUENTD_CONF
+        value: fluent.conf
+    resources:
+      limits:
+        cpu: 100m
+        memory: 200Mi
+      requests:
+        cpu: 50m
+        memory: 100Mi
