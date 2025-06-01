@@ -105,6 +105,32 @@ Password for user user:
 
 mydatabase=# SELECT name, origin, status, species FROM characters;
 ```
+### Get Helm Template
+```
+helm template ./helm 
+```
+### Deploy the chart in your test cluster
+```
+helm upgrade --install rick-morty-app ./helm/ --set secrets.POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
+```
+Check pods status
+```
+kubectl get pods -n test -l app=rick-morty-api
+```
+Delete the chart
+```
+helm uninstall rick-morty-app
+```
+Connect to Postgre
+```
+kubectl port-forward svc/postgres 5432:5432 -n test
+psql -h localhost -p 5432 -U user -d mydatabase
+```
+Connect to Redis
+```
+kubectl port-forward svc/redis 6379:6379 -n test
+redis-cli -h localhost
+```
 ---
 
 ## Cleanup
