@@ -89,3 +89,12 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rick-morty-api:pr-${{ github.event.pull_request.number }}
+
+  cd:
+    name: Deploy Application
+    uses: ./.github/workflows/cd.yaml
+    needs: build-and-push
+    with:
+      image_tag: ${{ github.event.pull_request.number }}
+    secrets:
+      postgres_pass: ${{ secrets.POSTGRES_PASSWORD }}
