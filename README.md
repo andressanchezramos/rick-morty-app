@@ -115,7 +115,7 @@ helm upgrade --install rick-morty-app ./helm/ --set secrets.POSTGRES_PASSWORD="$
 ```
 Check pods status
 ```
-kubectl get pods -n test -l app=rick-morty-api
+kubectl get pods -n test -l app=rick-morty-api # Update namespace according to your setup
 ```
 Delete the chart
 ```
@@ -123,12 +123,12 @@ helm uninstall rick-morty-app
 ```
 Connect to Postgre
 ```
-kubectl port-forward svc/postgres 5432:5432 -n test
+kubectl port-forward svc/postgres 5432:5432 -n test # Update namespace according to your setup
 psql -h localhost -p 5432 -U user -d mydatabase
 ```
 Connect to Redis
 ```
-kubectl port-forward svc/redis 6379:6379 -n test
+kubectl port-forward svc/redis 6379:6379 -n test # Update namespace according to your setup
 redis-cli -h localhost
 ```
 ---
@@ -142,3 +142,14 @@ To stop the containers:
 To stop and remove volumes (including database data):
 
 `docker compose down -v`
+
+## CICD considerations
+
+The following variables were created in the project's repo for CICD integration
+
+Docker credentials:
+- DOCKERHUB_TOKEN
+- DOCKERHUB_USERNAME
+
+Postgres Password:
+- POSTGRES_PASSWORD

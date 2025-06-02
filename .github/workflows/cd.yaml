@@ -1,0 +1,56 @@
+name: CD Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      image_tag:
+        required: true
+        type: string
+    secrets:
+        postgres_pass:
+          required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Minikube
+        uses: medyagh/setup-minikube@latest
+
+      - name: Start Minikube
+        run: |
+          minikube start --driver=docker
+          minikube addons enable ingress
+
+      - name: Set up kubectl
+        run: |
+          kubectl version --client
+          minikube kubectl -- get pods -A
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install rick-morty-app ./helm/ --set secrets.POSTGRES_PASSWORD="${{ secrets.postgres_pass }} "
+
+      - name: Wait for app to be ready
+        run: |
+          kubectl rollout status deployment/rick-morty-api --timeout=120s
+
+      - name: Verify Deployment
+        run: kubectl get all
+
+      #- name: Port forward ingress controller
+      #  run: |
+      #    kubectl port-forward --namespace ingress-nginx service/ingress-nginx-controller 8000:80 &
+      #    sleep 10
+  
+      - name: Check health endpoint
+        run: |
+          echo "$(minikube ip) rick-morty-api.local" | sudo tee -a /etc/hosts
+          curl --fail http://rick-morty-api.local:8080/health || (echo "Healthcheck failed" && exit 1)
+          #curl --fail http://localhost:8080/health || (echo "Healthcheck failed" && exit 1)

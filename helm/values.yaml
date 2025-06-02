@@ -1,5 +1,5 @@
 appName: rick-morty-api
-namespace: "test"
+namespace: "default"
 replicas: 2
 registry: "docker.io"
 image: "andressanchezramos/rick-morty-api"
@@ -66,3 +66,8 @@ extraContainers:
       requests:
         cpu: 50m
         memory: 100Mi
+
+ingress:
+  paths:
+    - path: /health
+    - path: /characters
