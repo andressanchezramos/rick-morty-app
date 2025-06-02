@@ -1,19 +1,14 @@
 name: CD Pipeline
 
 on:
-  #workflow_call:
-  #  inputs:
-  #    image_tag:
-  #      required: true
-  #      type: string
-  #  secrets:
-  #      postgres_pass:
-  #        required: true
-  # Debugging CD action
-  pull_request:
-    branches:
-      - main
-    types: [opened, synchronize]
+  workflow_call:
+    inputs:
+      image_tag:
+        required: true
+        type: string
+    secrets:
+        postgres_pass:
+          required: true
 
 jobs:
   deploy:
@@ -50,7 +45,6 @@ jobs:
           helm upgrade --install rick-morty-app ./helm/ \
           --set image_tag="pr-4" \
           --set secrets.POSTGRES_PASSWORD="${{ secrets.postgres_pass }}"
-          #--set image_tag="${{ inputs.image_tag }}" \
 
       - name: Wait for app to be ready
         run: |
