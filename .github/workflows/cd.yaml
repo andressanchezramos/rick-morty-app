@@ -1,19 +1,19 @@
 name: CD Pipeline
 
 on:
-  workflow_call:
-    inputs:
-      image_tag:
-        required: true
-        type: string
-    secrets:
-        postgres_pass:
-          required: true
+  #workflow_call:
+  #  inputs:
+  #    image_tag:
+  #      required: true
+  #      type: string
+  #  secrets:
+  #      postgres_pass:
+  #        required: true
   # Debugging CD action
-  #pull_request:
-  #  branches:
-  #    - main
-  #  types: [opened, synchronize]
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize]
 
 jobs:
   deploy:
@@ -35,7 +35,7 @@ jobs:
           kubectl wait --namespace ingress-nginx \
             --for=condition=Ready pod \
             --selector=app.kubernetes.io/component=controller \
-            --timeout=120s
+            --timeout=360s
 
       - name: Set up kubectl
         run: |
@@ -48,12 +48,13 @@ jobs:
       - name: Deploy with Helm
         run: |
           helm upgrade --install rick-morty-app ./helm/ \
-          --set image_tag="${{ inputs.image_tag }}" \
+          #--set image_tag="${{ inputs.image_tag }}" \
           --set secrets.POSTGRES_PASSWORD="${{ secrets.postgres_pass }}"
+          --set image_tag="pr-4" \
 
       - name: Wait for app to be ready
         run: |
-          kubectl rollout status deployment/rick-morty-api --timeout=120s
+          kubectl rollout status deployment/rick-morty-api --timeout=240s
 
       - name: Verify Deployment
         run: kubectl get all
