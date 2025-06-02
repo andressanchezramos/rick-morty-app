@@ -49,8 +49,8 @@ jobs:
         run: |
           helm upgrade --install rick-morty-app ./helm/ \
           --set image_tag="pr-4" \
-          #--set image_tag="${{ inputs.image_tag }}" \
           --set secrets.POSTGRES_PASSWORD="${{ secrets.postgres_pass }}"
+          #--set image_tag="${{ inputs.image_tag }}" \
 
       - name: Wait for app to be ready
         run: |
