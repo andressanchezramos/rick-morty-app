@@ -1,14 +1,19 @@
 name: CD Pipeline
 
 on:
-  workflow_call:
-    inputs:
-      image_tag:
-        required: true
-        type: string
-    secrets:
-        postgres_pass:
-          required: true
+  #workflow_call:
+  #  inputs:
+  #    image_tag:
+  #      required: true
+  #      type: string
+  #  secrets:
+  #      postgres_pass:
+  #        required: true
+  # Debugging CD action
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize]
 
 jobs:
   deploy:
@@ -25,6 +30,13 @@ jobs:
           minikube start --driver=docker
           minikube addons enable ingress
 
+      - name: Wait for ingress controller to be ready
+        run: |
+          kubectl wait --namespace ingress-nginx \
+            --for=condition=Ready pod \
+            --selector=app.kubernetes.io/component=controller \
+            --timeout=120s
+
       - name: Set up kubectl
         run: |
           kubectl version --client
@@ -35,7 +47,10 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-          helm upgrade --install rick-morty-app ./helm/ --set secrets.POSTGRES_PASSWORD="${{ secrets.postgres_pass }} "
+          helm upgrade --install rick-morty-app ./helm/ \
+          --set image_tag="pr-1" \
+          --set secrets.POSTGRES_PASSWORD="${{ secrets.postgres_pass }}"
+          #--set image_tag="${{ inputs.image_tag }}" \
 
       - name: Wait for app to be ready
         run: |
