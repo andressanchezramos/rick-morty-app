@@ -1,19 +1,19 @@
 name: CD Pipeline
 
 on:
-  #workflow_call:
-  #  inputs:
-  #    image_tag:
-  #      required: true
-  #      type: string
-  #  secrets:
-  #      postgres_pass:
-  #        required: true
+  workflow_call:
+    inputs:
+      image_tag:
+        required: true
+        type: string
+    secrets:
+        postgres_pass:
+          required: true
   # Debugging CD action
-  pull_request:
-    branches:
-      - main
-    types: [opened, synchronize]
+  #pull_request:
+  #  branches:
+  #    - main
+  #  types: [opened, synchronize]
 
 jobs:
   deploy:
@@ -48,9 +48,8 @@ jobs:
       - name: Deploy with Helm
         run: |
           helm upgrade --install rick-morty-app ./helm/ \
-          --set image_tag="pr-1" \
+          --set image_tag="${{ inputs.image_tag }}" \
           --set secrets.POSTGRES_PASSWORD="${{ secrets.postgres_pass }}"
-          #--set image_tag="${{ inputs.image_tag }}" \
 
       - name: Wait for app to be ready
         run: |
@@ -59,13 +58,8 @@ jobs:
       - name: Verify Deployment
         run: kubectl get all
 
-      #- name: Port forward ingress controller
-      #  run: |
-      #    kubectl port-forward --namespace ingress-nginx service/ingress-nginx-controller 8000:80 &
-      #    sleep 10
-  
-      - name: Check health endpoint
+      - name: Port-forward and test
         run: |
-          echo "$(minikube ip) rick-morty-api.local" | sudo tee -a /etc/hosts
-          curl --fail http://rick-morty-api.local:8080/health || (echo "Healthcheck failed" && exit 1)
-          #curl --fail http://localhost:8080/health || (echo "Healthcheck failed" && exit 1)
+          kubectl port-forward svc/rick-morty-api 8000:8000 &
+          sleep 5
+          curl http://localhost:8000/health --fail
