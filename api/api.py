@@ -1,10 +1,13 @@
 from fastapi import FastAPI, HTTPException, Request, Query
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from dotenv import load_dotenv
 from typing import Literal
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+import time
+
 from api.db import RedisManager, PostgreManager
 
 load_dotenv()
@@ -19,6 +22,47 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 # Initialize managers
 redis_manager = RedisManager()
 postgres_manager = PostgreManager()
+
+# Prometheus metrics
+REQUEST_COUNT = Counter(
+    "app_requests_total",
+    "Total number of requests",
+    ["method", "endpoint", "http_status"],
+)
+REQUEST_LATENCY = Histogram(
+    "app_request_latency_seconds", "Request latency in seconds", ["endpoint"]
+)
+ERROR_COUNT = Counter("app_errors_total", "Total number of errors", ["endpoint"])
+
+
+# Middleware to track metrics
+@app.middleware("http")
+async def metrics_middleware(request: Request, call_next):
+    start_time = time.time()
+    endpoint = request.url.path
+    method = request.method
+
+    try:
+        response = await call_next(request)
+        status_code = response.status_code
+    except Exception:
+        ERROR_COUNT.labels(endpoint=endpoint).inc()
+        status_code = 500
+        raise
+    finally:
+        duration = time.time() - start_time
+        REQUEST_LATENCY.labels(endpoint=endpoint).observe(duration)
+        REQUEST_COUNT.labels(
+            method=method, endpoint=endpoint, http_status=status_code
+        ).inc()
+
+    return response
+
+
+# Prometheus metrics endpoint
+@app.get("/metrics")
+def metrics():
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
 @app.get("/health")
