@@ -37,6 +37,9 @@
         <mxCell id="AWvZD-LFlDiP_jnZuqWm-38" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="AWvZD-LFlDiP_jnZuqWm-2">
           <mxGeometry x="45" y="320" width="10" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="AWvZD-LFlDiP_jnZuqWm-41" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="AWvZD-LFlDiP_jnZuqWm-2">
+          <mxGeometry x="45" y="110" width="10" height="30" as="geometry" />
+        </mxCell>
         <mxCell id="AWvZD-LFlDiP_jnZuqWm-4" value="Rick &amp;amp; Morty API" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=0;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
           <mxGeometry x="550" y="150" width="100" height="350" as="geometry" />
         </mxCell>
@@ -111,7 +114,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="AWvZD-LFlDiP_jnZuqWm-31" value="" style="html=1;points=[];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;elbow&quot;:&quot;vertical&quot;,&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
-          <mxGeometry x="475" y="400" width="10" height="30" as="geometry" />
+          <mxGeometry x="475" y="400" width="10" height="20" as="geometry" />
         </mxCell>
         <mxCell id="AWvZD-LFlDiP_jnZuqWm-34" value="Actor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
           <mxGeometry x="60" y="460" width="30" height="60" as="geometry" />
