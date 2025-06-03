@@ -11,6 +11,9 @@ Note: The external API only supports filtering by "species" and "status".
 - GitHub Actions for CI/CD
 - Comprehensive test suite
 
+## Diagrams
+![Architecture Diagram]``
+
 ---
 
 ## Project Structure
@@ -23,6 +26,7 @@ rick-morty-app/
 │   ├── config.py           # Configuration utilities
 │   ├── db.py               # Database interaction layer
 │   └── ...
+├── docs/                  
 ├── helm/                   # Helm Charts
 │   ├── templates/          # Chart Templates
 │   ├── Chart.yaml          # Chart file
