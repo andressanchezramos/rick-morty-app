@@ -13,7 +13,6 @@ Note: The external API only supports filtering by "species" and "status".
 
 ## Diagrams
 ![Alt text](docs/architecture.svg)
-<img src="docs/architecture.svg">
 
 ---
 
