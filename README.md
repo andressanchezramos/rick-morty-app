@@ -13,7 +13,7 @@ Note: The external API only supports filtering by "species" and "status".
 
 ## Diagrams
 ![Alt text](docs/architecture.svg)
-
+![Alt text](docs/architecture.png)
 ---
 
 ## Project Structure
