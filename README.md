@@ -12,7 +12,8 @@ Note: The external API only supports filtering by "species" and "status".
 - Comprehensive test suite
 
 ## Diagrams
-![Architecture Diagram]``
+![Alt text](.docs/architecture.svg)
+<img src=".docs/architecture.svg">
 
 ---
 
