@@ -5,13 +5,13 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from dotenv import load_dotenv
 from typing import Literal
+from api.db import RedisManager, PostgreManager
 
 load_dotenv()
 
-from api.db import RedisManager, PostgreManager  # Adjust import paths as needed
-
 app = FastAPI(title="Character API")
 
+# Configure Rate Limiting
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)

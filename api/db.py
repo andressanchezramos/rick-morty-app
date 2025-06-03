@@ -28,6 +28,9 @@ class RedisManager:
         return json.loads(data) if data else None
 
     def check_connection(self) -> bool:
+        """
+        Check if the app can reach redis
+        """
         try:
             return self.client.ping()
         except redis.RedisError:
@@ -46,7 +49,10 @@ class PostgreManager:
         self.conn.autocommit = True
         self._create_table_if_not_exists()
 
-    def _create_table_if_not_exists(self):
+    def _create_table_if_not_exists(self) -> None:
+        """
+        Creates table in DB characters if it doesn't exist in postgre
+        """
         with self.conn.cursor() as cur:
             cur.execute(
                 """
@@ -82,6 +88,9 @@ class PostgreManager:
     def fetch_all_characters(
         self, sort: str = "asc", page: int = 1, limit: int = 10
     ) -> dict:
+        """
+        Gets characters stored in the DB with pagination support.
+        """
         if sort.lower() not in ("asc", "desc"):
             sort = "asc"
 
@@ -113,6 +122,9 @@ class PostgreManager:
         }
 
     def check_connection(self) -> bool:
+        """
+        Check if the app can reach Postgre
+        """
         try:
             with self.conn.cursor() as cur:
                 cur.execute("SELECT 1;")

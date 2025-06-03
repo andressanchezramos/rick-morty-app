@@ -18,9 +18,6 @@ class RickAndMortyAPI:
         self.url = "https://rickandmortyapi.com/api/character/"
         self.params = {"species": "Human", "status": "Alive"}
 
-    def _is_rate_limited(self, response):
-        return response is not None and response.status_code == 429
-
     @retry(
         retry=(
             retry_if_exception_type(RequestException)
@@ -29,7 +26,13 @@ class RickAndMortyAPI:
         wait=wait_exponential(multiplier=1, min=2, max=60),
         stop=stop_after_attempt(3),
     )
-    def _robust_get(self, url, params=None):
+    def _robust_get(self, url, params=None) -> requests.Response:
+        """
+        Uses tenacity to perform a robust request and retry the request if:
+            A RequestException occurs (e.g., network error)
+            The response has status code 429 (rate limited)
+        Implements exponential backoff and respects the Retry-After header if present.
+        """
         response = requests.get(url, params=params, timeout=10)
 
         if response.status_code == 429:
