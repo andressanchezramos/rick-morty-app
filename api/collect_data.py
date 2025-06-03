@@ -16,7 +16,7 @@ redis_db = RedisManager()
 
 if __name__ == "__main__":
     """
-    Stand-alone script to query the API and store data in both DB and cache
+    Stand-alone module to query the API and store data in both DB and cache
     """
     api = RickAndMortyAPI()
     complete_results, characters = api.get_filtered_characters()
