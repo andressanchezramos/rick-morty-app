@@ -4,6 +4,13 @@ This project provides a REST API to collect, store, and query character data fro
 
 Note: The external API only supports filtering by "species" and "status".
 
+## Features
+- Python backend with modular architecture
+- Dockerized for easy deployment
+- Helm charts for Kubernetes deployment
+- GitHub Actions for CI/CD
+- Comprehensive test suite
+
 ---
 
 ## Project Structure
@@ -16,6 +23,10 @@ rick-morty-app/
 │   ├── config.py           # Configuration utilities
 │   ├── db.py               # Database interaction layer
 │   └── ...
+├── helm/                   # Helm Charts
+│   ├── templates/          # Chart Templates
+│   ├── Chart.yaml          # Chart file
+│   ├── values.yaml         # Values file
 ├── tests/                  # Unit tests
 ├── docker-compose.yaml     # Local environment setup
 ├── requirements.txt        # Python dependencies
@@ -56,7 +67,7 @@ source .venv/bin/activate
 
 ---
 
-## Running the Application
+## Running & Testing the Application
 
 ### Collect Data Manually
 
@@ -111,7 +122,7 @@ helm template ./helm
 ```
 ### Deploy the chart in your test cluster
 ```
-helm upgrade --install rick-morty-app ./helm/ --set secrets.POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
+helm upgrade --install rick-morty-app ./helm/ --set image_tag="$IMAGE_TAG" --set secrets.POSTGRES_PASSWORD="$POSTGRES_PASSWORD"
 ```
 Check pods status
 ```
@@ -144,6 +155,17 @@ To stop and remove volumes (including database data):
 `docker compose down -v`
 
 ## CICD considerations
+
+Workflows are defined in `.github/workflows/`.
+
+This project uses GitHub Actions for:
+- Running tests on PR creation
+- Linting and formatting
+- Static code analysis and docker image analysis
+- Building Docker images
+- Upload Images to dockerhub
+- Deploy the service to minikub
+- Validate correct deployment and service accessibility
 
 The following variables were created in the project's repo for CICD integration
 
