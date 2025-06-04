@@ -13,6 +13,10 @@ REQUEST_LATENCY = Histogram(
     "app_request_latency_seconds", "Request latency in seconds", ["endpoint"]
 )
 ERROR_COUNT = Counter("app_errors_total", "Total number of errors", ["endpoint"])
+CHARACTER_QUERY_COUNT = Counter(
+    "app_characters_returned_total",
+    "Total number of characters returned from the /characters endpoint",
+)
 
 EXCLUDED_PATHS = {"/metrics", "/health"}
 

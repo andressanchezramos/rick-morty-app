@@ -5,11 +5,11 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from dotenv import load_dotenv
 from typing import Literal
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
-import time
 
 from api.db import RedisManager, PostgreManager
 from api.config import setup_metrics
+from api.config import CHARACTER_QUERY_COUNT
+
 
 load_dotenv()
 
@@ -63,4 +63,8 @@ async def get_characters(
     characters = postgres_manager.fetch_all_characters(
         sort=sort, page=page, limit=limit
     )
+
+    characters_list = characters.get("results", [])
+    CHARACTER_QUERY_COUNT.inc(len(characters_list))
+
     return characters
