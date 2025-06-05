@@ -42,6 +42,22 @@ rick-morty-app/
 
 ## Development Setup
 
+### Pre-requisites
+
+The app is expecting a set of environment variables in order for it to work. Here is a sample .env file you can use to set the environment variables in your local set-up
+
+```
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_DB=mydatabase
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_TTL=3600
+```
+
 ### Automated Setup
 
 To spin up the environment quickly:

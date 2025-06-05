@@ -3,13 +3,22 @@ version: '3.8'
 
 services:
   app:
-    build: ./app
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: fastapi_app
     ports:
       - "8000:8000"
     depends_on:
       - redis
       - postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+
 
   postgres:
     image: postgres:15
