@@ -10,6 +10,8 @@ Note: The external API only supports filtering by "species" and "status".
 - Helm charts for Kubernetes deployment
 - GitHub Actions for CI/CD
 - Comprehensive test suite
+- Metrics for app monitoring
+- TLocal test monitoring to stack for viewing metrics and dashboards
 
 ## Diagrams
 ![Alt text](docs/architecture.svg)
@@ -165,6 +167,39 @@ kubectl port-forward svc/redis 6379:6379 -n test # Update namespace according to
 redis-cli -h localhost
 ```
 ---
+
+## Monitoring
+
+### Metrics
+
+The following metrics have been defined for the service:
+- Total requests
+- Request latency
+- Errors
+- Count of characters queried
+
+### Testing the Metric Collection
+
+The docker compose file includes a prometheus and grafana. You can access prometheus at http://localhost:9090/
+
+Here are sample PromQL queries for checking their values:
+
+- Query characters count
+```
+sum(app_characters_returned_total)
+```
+- Errors per endpoint
+```
+sum by (endpoint) (app_errors_total)
+```
+- Avg latency per endpoint
+```
+rate(app_request_latency_seconds_sum[5m]) / rate(app_request_latency_seconds_count[5m])
+```
+- Requests per endpoint
+```
+sum by (endpoint) (app_requests_total)
+```
 
 ## Cleanup
 
