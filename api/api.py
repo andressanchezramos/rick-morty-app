@@ -1,22 +1,30 @@
 from fastapi import FastAPI, HTTPException, Request, Query
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from dotenv import load_dotenv
 from typing import Literal
+
 from api.db import RedisManager, PostgreManager
+from api.config import setup_metrics
+from api.config import CHARACTER_QUERY_COUNT
+
 
 load_dotenv()
 
 app = FastAPI(title="Character API")
+
+
+# Setup Prometheus metrics
+setup_metrics(app)
 
 # Configure Rate Limiting
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# Initialize managers
+# Initialize DB managers
 redis_manager = RedisManager()
 postgres_manager = PostgreManager()
 
@@ -55,4 +63,8 @@ async def get_characters(
     characters = postgres_manager.fetch_all_characters(
         sort=sort, page=page, limit=limit
     )
+
+    characters_list = characters.get("results", [])
+    CHARACTER_QUERY_COUNT.inc(len(characters_list))
+
     return characters

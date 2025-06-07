@@ -10,6 +10,8 @@ Note: The external API only supports filtering by "species" and "status".
 - Helm charts for Kubernetes deployment
 - GitHub Actions for CI/CD
 - Comprehensive test suite
+- Metrics for app monitoring
+- TLocal test monitoring to stack for viewing metrics and dashboards
 
 ## Diagrams
 ![Alt text](docs/architecture.svg)
@@ -41,6 +43,22 @@ rick-morty-app/
 ---
 
 ## Development Setup
+
+### Pre-requisites
+
+The app is expecting a set of environment variables in order for it to work. Here is a sample .env file you can use to set the environment variables in your local set-up
+
+```
+POSTGRES_USER=user
+POSTGRES_PASSWORD=password
+POSTGRES_DB=mydatabase
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_TTL=3600
+```
 
 ### Automated Setup
 
@@ -104,6 +122,8 @@ Query with pagination:
 
 `curl http://localhost:8000/characters?page=2&limit=10`
 
+Query metrics
+`curl http://localhost:8000/metrics`
 ---
 
 ## Useful Commands
@@ -148,15 +168,56 @@ redis-cli -h localhost
 ```
 ---
 
+## Monitoring
+
+### Metrics
+
+The following metrics have been defined for the service:
+- Total requests
+- Request latency
+- Errors
+- Count of characters queried
+
+### Testing the Metric Collection
+
+The docker compose file includes a prometheus and grafana. You can access prometheus at http://localhost:9090/
+
+Here are sample PromQL queries for checking their values:
+
+- Query characters count
+```
+sum(app_characters_returned_total)
+```
+- Errors per endpoint
+```
+sum by (endpoint) (app_errors_total)
+```
+- Avg latency per endpoint
+```
+rate(app_request_latency_seconds_sum[5m]) / rate(app_request_latency_seconds_count[5m])
+```
+- Requests per endpoint
+```
+sum by (endpoint) (app_requests_total)
+```
+
+### Dashboards
+
+There is a pre-define dashboard in the local grafana instance which can be accessed at the following URL:
+
+http://localhost:3000/dashboards
+
+The definition of the dashboard is found in the monitoring/grafana directory.
+
 ## Cleanup
 
 To stop the containers:
 
-`docker compose down`
+`docker-compose down`
 
 To stop and remove volumes (including database data):
 
-`docker compose down -v`
+`docker-compose down -v`
 
 ## CICD considerations
 
