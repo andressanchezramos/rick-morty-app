@@ -201,6 +201,14 @@ rate(app_request_latency_seconds_sum[5m]) / rate(app_request_latency_seconds_cou
 sum by (endpoint) (app_requests_total)
 ```
 
+### Dashboards
+
+There is a pre-define dashboard in the local grafana instance which can be accessed at the following URL:
+
+http://localhost:3000/dashboards
+
+The definition of the dashboard is found in the monitoring/grafana directory.
+
 ## Cleanup
 
 To stop the containers:
