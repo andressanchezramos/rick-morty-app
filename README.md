@@ -33,6 +33,9 @@ rick-morty-app/
 │   ├── templates/          # Chart Templates
 │   ├── Chart.yaml          # Chart file
 │   ├── values.yaml         # Values file
+├── monitoring/                   # Helm Charts
+│   ├── grafana/            # Dashboard Templates
+│   ├── prometheus.yml      # Prometheus configuration
 ├── tests/                  # Unit tests
 ├── docker-compose.yaml     # Local environment setup
 ├── requirements.txt        # Python dependencies
@@ -62,6 +65,12 @@ REDIS_TTL=3600
 
 ### Automated Setup
 
+The automated set-up includes:
+- The app's service.
+- A redis instance
+- A postgre instance
+- A prometheus + grafana monitoring stack
+
 To spin up the environment quickly:
 
 `./start_server.sh`
@@ -74,6 +83,8 @@ To shut it down:
 
 ### Manual Setup
 
+Useful for debugging the service's behavior while developing
+
 1. Create and activate a virtual environment:
 ```
 python3 -m venv .venv
@@ -83,7 +94,9 @@ source .venv/bin/activate
 
 `pip install -r requirements.txt`
 
-3. Start Redis and PostgreSQL using Docker:
+3. Comment-out the "app" section in the docker-compose
+
+4. Start Redis, PostgreSQL and the monitoring stack using Docker:
 
 `docker-compose up -d`
 
@@ -122,8 +135,10 @@ Query with pagination:
 
 `curl http://localhost:8000/characters?page=2&limit=10`
 
-Query metrics
+Query metrics:
+
 `curl http://localhost:8000/metrics`
+
 ---
 
 ## Useful Commands

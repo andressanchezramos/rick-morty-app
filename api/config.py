@@ -2,6 +2,11 @@ import logging
 from fastapi import Request, Response
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 import time
+from opentelemetry import trace
+from opentelemetry.sdk.resources import SERVICE_NAME, Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 # Define Prometheus metrics
 REQUEST_COUNT = Counter(
@@ -22,6 +27,10 @@ EXCLUDED_PATHS = {"/metrics", "/health"}
 
 
 def setup_metrics(app):
+    """
+    Configure service to export metrics to prometheus
+    """
+
     @app.middleware("http")
     async def metrics_middleware(request: Request, call_next):
         endpoint = request.url.path
@@ -63,3 +72,21 @@ def _configure_logging(name: str) -> logging.Logger:
     )
     logger = logging.getLogger(name)
     return logger
+
+
+def setup_tracing(app) -> trace.Tracer:
+    """
+    Configure the Service's tracing
+    """
+    provider = TracerProvider(resource=Resource.create({SERVICE_NAME: "character-api"}))
+    trace.set_tracer_provider(provider)
+
+    # Console exporter for local dev
+    console_exporter = ConsoleSpanExporter()
+    span_processor = BatchSpanProcessor(console_exporter)
+    provider.add_span_processor(span_processor)
+
+    # Auto-instrument FastAPI
+    FastAPIInstrumentor.instrument_app(app)
+
+    return trace.get_tracer(__name__)

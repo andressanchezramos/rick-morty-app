@@ -9,15 +9,17 @@ from typing import Literal
 from api.db import RedisManager, PostgreManager
 from api.config import setup_metrics
 from api.config import CHARACTER_QUERY_COUNT
-
+from api.config import setup_tracing
 
 load_dotenv()
 
 app = FastAPI(title="Character API")
 
-
 # Setup Prometheus metrics
 setup_metrics(app)
+
+# Setup Tracing
+tracer = setup_tracing(app)
 
 # Configure Rate Limiting
 limiter = Limiter(key_func=get_remote_address)
@@ -60,10 +62,10 @@ async def get_characters(
     page: int = Query(1, ge=1),
     limit: int = Query(10, ge=1, le=100),
 ):
-    characters = postgres_manager.fetch_all_characters(
-        sort=sort, page=page, limit=limit
-    )
-
+    with tracer.start_as_current_span("db_query"):
+        characters = postgres_manager.fetch_all_characters(
+            sort=sort, page=page, limit=limit
+        )
     characters_list = characters.get("results", [])
     CHARACTER_QUERY_COUNT.inc(len(characters_list))
 
