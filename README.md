@@ -137,6 +137,7 @@ Query with pagination:
 
 Query metrics
 `curl http://localhost:8000/metrics`
+
 ---
 
 ## Useful Commands
