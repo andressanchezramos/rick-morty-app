@@ -135,7 +135,8 @@ Query with pagination:
 
 `curl http://localhost:8000/characters?page=2&limit=10`
 
-Query metrics
+Query metrics:
+
 `curl http://localhost:8000/metrics`
 
 ---
