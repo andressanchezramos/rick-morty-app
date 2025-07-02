@@ -1,0 +1,5 @@
+project_id   = "coherent-span-464616-q7"
+region       = "europe-west1"
+network_name = "custom-vpc"
+subnet_name  = "custom-subnet"
+subnet_cidr  = "10.1.0.0/24"

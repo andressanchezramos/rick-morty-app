@@ -255,3 +255,15 @@ Docker credentials:
 
 Postgres Password:
 - POSTGRES_PASSWORD
+
+## Infrastructure Creation
+
+Follow this guide to install "gcloud": https://cloud.google.com/sdk/docs/downloads-snap
+
+### Bootstrap
+
+In order to create the service account, role and key for managing terraform, execute the following script
+
+```
+/rick-morty-app/.infra/bootstrap$ ./create_sa.sh
+```
