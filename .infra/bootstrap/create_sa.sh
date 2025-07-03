@@ -5,7 +5,13 @@ PROJECT_ID="coherent-span-464616-q7"
 SA_NAME="terraform-vpc-sa"
 SA_EMAIL="$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
 KEY_FILE="terraform-vpc-key.json"
-ROLE="roles/compute.networkAdmin"
+ROLES=(
+  "roles/serviceusage.serviceUsageAdmin"
+  "roles/container.admin"
+  "roles/compute.networkAdmin"
+  "roles/iam.serviceAccountUser"
+  "roles/resourcemanager.projectIamAdmin"
+  )
 
 # === FUNCTIONS ===
 
@@ -29,20 +35,22 @@ else
   check_command_success "Service account creation"
 fi
 
-# === ASSIGN IAM ROLE ===
-echo "🔍 Checking if IAM role '$ROLE' is already assigned..."
-if gcloud projects get-iam-policy "$PROJECT_ID" \
-  --flatten="bindings[].members" \
-  --format="table(bindings.role)" \
-  --filter="bindings.members:serviceAccount:$SA_EMAIL AND bindings.role:$ROLE" | grep -q "$ROLE"; then
-  echo "✅ Role '$ROLE' already assigned to '$SA_EMAIL'."
-else
-  echo "➕ Assigning role '$ROLE' to '$SA_EMAIL'..."
-  gcloud projects add-iam-policy-binding "$PROJECT_ID" \
-    --member="serviceAccount:$SA_EMAIL" \
-    --role="$ROLE"
-  check_command_success "IAM role assignment"
-fi
+# === ASSIGN IAM ROLES ===
+for ROLE in "${ROLES[@]}"; do
+  echo "🔍 Checking if IAM role '$ROLE' is already assigned..."
+  if gcloud projects get-iam-policy "$PROJECT_ID" \
+    --flatten="bindings[].members" \
+    --format="table(bindings.role)" \
+    --filter="bindings.members:serviceAccount:$SA_EMAIL AND bindings.role:$ROLE" | grep -q "$ROLE"; then
+    echo "✅ Role '$ROLE' already assigned to '$SA_EMAIL'."
+  else
+    echo "➕ Assigning role '$ROLE' to '$SA_EMAIL'..."
+    gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+      --member="serviceAccount:$SA_EMAIL" \
+      --role="$ROLE"
+    check_command_success "IAM role assignment"
+  fi
+done
 
 # === CREATE SERVICE ACCOUNT KEY ===
 echo "🔍 Checking if key file '$KEY_FILE' exists..."

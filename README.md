@@ -258,6 +258,8 @@ Postgres Password:
 
 ## Infrastructure Creation
 
+### Pre-requisites
+
 Follow this guide to install "gcloud": https://cloud.google.com/sdk/docs/downloads-snap
 
 ### Bootstrap
@@ -267,3 +269,9 @@ In order to create the service account, role and key for managing terraform, exe
 ```
 /rick-morty-app/.infra/bootstrap$ ./create_sa.sh
 ```
+
+### Deploy the infrastructure
+
+Set the creds as an environment variable
+
+`/.infra$ export GOOGLE_APPLICATION_CREDENTIALS="bootstrap/terraform-vpc-key.json"`

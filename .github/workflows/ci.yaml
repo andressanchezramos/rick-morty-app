@@ -5,6 +5,10 @@ on:
     branches:
       - main
     types: [opened]
+    paths:
+      - "tests/*"
+      - "helm/*"
+      - "api/*"
 
 jobs:
   quality-checks:
